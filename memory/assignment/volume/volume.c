@@ -30,13 +30,16 @@ int main(int argc, char *argv[]) {
   float factor = atof(argv[3]);
 
   // TODO: Copy header from input file to output file
-  // First i need to read the header file which is 44 bytes in length
   uint8_t header[HEADER_SIZE];
-  while (fread(header, HEADER_SIZE, 1, input) != 0) {
-    fwrite(header, HEADER_SIZE, 1, output);
-  }
+  fread(header, sizeof(uint8_t), HEADER_SIZE, input);
+  fwrite(header, sizeof(uint8_t), HEADER_SIZE, output);
 
   // TODO: Read samples from input file and write updated data to output file
+  int16_t buffer;
+  while (fread(&buffer, sizeof(int16_t), 1, input) == 1) {
+    buffer *= factor;
+    fwrite(&buffer, sizeof(int16_t), 1, output);
+  }
 
   // Close files
   fclose(input);
